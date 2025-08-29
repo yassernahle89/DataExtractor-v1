@@ -9,8 +9,16 @@ app = FastAPI()
 load_dotenv()
 bootstrap_servers = os.getenv("BOOTSTRAP_SERVERS")
 
+# Common handler for both Kafka and API
+def print_if_json(msg):
+    if isinstance(msg, dict):
+        print(msg)  # prints like {"user": "yasser", "message": "hello world"}
+    else:
+        print("Received non-JSON message:", msg)
+
+# Handle Kafka messages
 def handle_kafka_message(msg: dict):
-    print("Processing message:", msg)
+    print_if_json(msg)
 
 @app.on_event("startup")
 def start_kafka_consumer():
