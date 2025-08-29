@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from shared_lib.kafka_consumer import KafkaConsumerService
 from dotenv import load_dotenv
 import os
+import json 
 
 app = FastAPI()
 
@@ -11,9 +12,16 @@ bootstrap_servers = os.getenv("BOOTSTRAP_SERVERS")
 # Common handler for both Kafka and API
 def print_if_json(msg):
     if isinstance(msg, dict):
-        print(msg)  # prints like {"user": "yasser", "message": "hello world"}
+        # Already parsed JSON
+        print(msg)
+    elif isinstance(msg, str):
+        try:
+            parsed = json.loads(msg)
+            print(parsed)  # dict-style print: {"user": "yasser", "message": "hello world"}
+        except json.JSONDecodeError:
+            print("Received non-JSON string:", msg)
     else:
-        print("Received non-JSON message:", msg)
+        print("Received unknown type:", msg)
 
 # Handle Kafka messages
 def handle_kafka_message(msg: dict):
