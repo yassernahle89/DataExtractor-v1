@@ -1,0 +1,348 @@
+# ============================================================
+# 1. Shared Environment Variables (.env -> ConfigMap)
+# ============================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shared-env
+data:
+  # Replace with your .env contents
+  BOOTSTRAP_SERVERS: "redpanda-0.uaenorth.cloudapp.azure.com:9094,redpanda-1.uaenorth.cloudapp.azure.com:9094,redpanda-2.uaenorth.cloudapp.azure.com:9094"
+  GROUP_ID: "Data-Extractor"
+  SOME_API_KEY: "abc123"
+
+---
+# ============================================================
+# 2. CSV Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csv-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csv-service
+  template:
+    metadata:
+      labels:
+        app: csv-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: csv-service
+        image: dokcerregistery.azurecr.io/csv-service:v1
+        ports:
+        - containerPort: 8021
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: csv-service
+spec:
+  type: ClusterIP
+  selector:
+    app: csv-service
+  ports:
+  - port: 8021
+    targetPort: 8021
+
+---
+# ============================================================
+# 3. Excel Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: excel-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: excel-service
+  template:
+    metadata:
+      labels:
+        app: excel-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: excel-service
+        image: dokcerregistery.azurecr.io/excel-service:v1
+        ports:
+        - containerPort: 8022
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: excel-service
+spec:
+  type: ClusterIP
+  selector:
+    app: excel-service
+  ports:
+  - port: 8022
+    targetPort: 8022
+
+---
+# ============================================================
+# 4. Image Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: image-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: image-service
+  template:
+    metadata:
+      labels:
+        app: image-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: image-service
+        image: dokcerregistery.azurecr.io/image-service:v1
+        ports:
+        - containerPort: 8023
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: image-service
+spec:
+  type: ClusterIP
+  selector:
+    app: image-service
+  ports:
+  - port: 8023
+    targetPort: 8023
+
+---
+# ============================================================
+# 5. PDF Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pdf-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pdf-service
+  template:
+    metadata:
+      labels:
+        app: pdf-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: pdf-service
+        image: dokcerregistery.azurecr.io/pdf-service:v1
+        ports:
+        - containerPort: 8024
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pdf-service
+spec:
+  type: ClusterIP
+  selector:
+    app: pdf-service
+  ports:
+  - port: 8024
+    targetPort: 8024
+
+---
+# ============================================================
+# 6. PPTX Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pptx-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pptx-service
+  template:
+    metadata:
+      labels:
+        app: pptx-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: pptx-service
+        image: dokcerregistery.azurecr.io/pptx-service:v1
+        ports:
+        - containerPort: 8025
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pptx-service
+spec:
+  type: ClusterIP
+  selector:
+    app: pptx-service
+  ports:
+  - port: 8025
+    targetPort: 8025
+
+---
+# ============================================================
+# 7. Web-Scraping Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-scraping-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-scraping-service
+  template:
+    metadata:
+      labels:
+        app: web-scraping-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: web-scraping-service
+        image: dokcerregistery.azurecr.io/web-scraping-service:v1
+        ports:
+        - containerPort: 8026
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-scraping-service
+spec:
+  type: ClusterIP
+  selector:
+    app: web-scraping-service
+  ports:
+  - port: 8026
+    targetPort: 8026
+
+---
+# ============================================================
+# 8. Word Service
+# ============================================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: word-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: word-service
+  template:
+    metadata:
+      labels:
+        app: word-service
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: word-service
+        image: dokcerregistery.azurecr.io/word-service:v1
+        ports:
+        - containerPort: 8027
+        envFrom:
+        - configMapRef:
+            name: shared-env
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: word-service
+spec:
+  type: ClusterIP
+  selector:
+    app: word-service
+  ports:
+  - port: 8027
+    targetPort: 8027
