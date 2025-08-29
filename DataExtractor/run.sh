@@ -7,7 +7,7 @@ set -e
 declare -A SERVICE_PORTS=(
   [csv-service]=8021
   [excel-service]=8022
-  [image-service]=8023
+  [image-service]=8023    
   [pdf-service]=8024
   [pptx-service]=8025
   [web-scraping-service]=8026
