@@ -11,7 +11,7 @@ EXPOSE 8026
 COPY . /app
 
 # Install dependencies including the shared_lib from GitHub
-RUN pip install --no-cache-dir fastapi uvicorn kafka-python confluent_kafka \
+RUN pip install --no-cache-dir fastapi uvicorn kafka-python confluent_kafka dotenv \
     && pip install --no-cache-dir "git+https://github.com/yassernahle89/shared_Lib.git#egg=shared_lib"
 
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8026"]
