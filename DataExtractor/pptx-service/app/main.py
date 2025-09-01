@@ -32,7 +32,7 @@ def start_kafka_consumer():
     consumer = KafkaConsumerService(
         topic="pptx",
         bootstrap_servers=bootstrap_servers,
-        group_id="Data-Extractor",
+        group_id="Data-Extractor-pptx",
         callback=handle_kafka_message,
     )
     consumer.start()
