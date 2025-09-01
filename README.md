@@ -21,11 +21,19 @@ All resources will be organized under one group:
 
 ```bash
 az group create --name redpandaResourceGroup --location eastus
+```
+## 🛠️ Step 2: Create an Azure Container Registry (ACR)
+
+Create a private registry to store your Docker images:
 
 ```bash
 az acr create --resource-group redpandaResourceGroup \
   --name dokcerregistery \
   --sku Basic
+```
+## 🏗️ Step 3: Build and Push Docker Images
+
+Tag and push your service images to ACR. Example for one service (csv-service):
 
 ```bash
 # Replace <acrLoginServer> with the ACR login server (e.g., dokcerregistery.azurecr.io)
@@ -37,6 +45,10 @@ docker build -t $ACR_LOGIN_SERVER/csv-service:v1 ./csv-service
 # Push image to ACR
 docker push $ACR_LOGIN_SERVER/csv-service:v1
 
+```
+## ☸️ Step 4: Create AKS Cluster
+
+Create a Kubernetes cluster and attach it to your ACR:
 
 ```bash
 az aks create \
@@ -47,12 +59,21 @@ az aks create \
   --enable-addons monitoring \
   --generate-ssh-keys \
   --attach-acr dokcerregistery
+```
+## 🔑 Step 5: Connect to the AKS Cluster
+
+Get the cluster credentials to use kubectl:
 
 ```bash
 az aks get-credentials --resource-group redpandaResourceGroup --name RedpandaConsumers
+```
 
+## 📦 Step 6: Deploy Services
+
+Apply the Kubernetes manifest file (kube_service.yaml) to deploy your services:
 
 ```bash
 kubectl apply -f kube_service.yaml
+```
 
 
