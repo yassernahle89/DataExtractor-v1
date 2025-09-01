@@ -1,17 +1,4 @@
-# ============================================================
-# 1. Shared Environment Variables (.env -> ConfigMap)
-# ============================================================
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: shared-env
-data:
-  # Replace with your .env contents
-  BOOTSTRAP_SERVERS: "redpanda-0.uaenorth.cloudapp.azure.com:9094,redpanda-1.uaenorth.cloudapp.azure.com:9094,redpanda-2.uaenorth.cloudapp.azure.com:9094"
-  GROUP_ID: "Data-Extractor"
-  SOME_API_KEY: "abc123"
 
----
 # ============================================================
 # 2. CSV Service
 # ============================================================
@@ -29,16 +16,11 @@ spec:
       labels:
         app: csv-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: csv-service
-        image: dokcerregistery.azurecr.io/csv-service:v1
+        image: dokcerregistery.azurecr.io/csv-service:v1.1
         ports:
         - containerPort: 8021
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -77,16 +59,11 @@ spec:
       labels:
         app: excel-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: excel-service
-        image: dokcerregistery.azurecr.io/excel-service:v1
+        image: dokcerregistery.azurecr.io/excel-service:v1.1
         ports:
         - containerPort: 8022
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -125,16 +102,11 @@ spec:
       labels:
         app: image-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: image-service
-        image: dokcerregistery.azurecr.io/image-service:v1
+        image: dokcerregistery.azurecr.io/image-service:v1.1
         ports:
         - containerPort: 8023
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -173,16 +145,11 @@ spec:
       labels:
         app: pdf-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: pdf-service
-        image: dokcerregistery.azurecr.io/pdf-service:v1
+        image: dokcerregistery.azurecr.io/pdf-service:v1.1
         ports:
         - containerPort: 8024
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -221,16 +188,11 @@ spec:
       labels:
         app: pptx-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: pptx-service
-        image: dokcerregistery.azurecr.io/pptx-service:v1
+        image: dokcerregistery.azurecr.io/pptx-service:v1.1
         ports:
         - containerPort: 8025
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -269,16 +231,11 @@ spec:
       labels:
         app: web-scraping-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: web-scraping-service
-        image: dokcerregistery.azurecr.io/web-scraping-service:v1
+        image: dokcerregistery.azurecr.io/web-scraping-service:v1.1
         ports:
         - containerPort: 8026
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
@@ -317,16 +274,11 @@ spec:
       labels:
         app: word-service
     spec:
-      imagePullSecrets:
-      - name: acr-secret
       containers:
       - name: word-service
-        image: dokcerregistery.azurecr.io/word-service:v1
+        image: dokcerregistery.azurecr.io/word-service:v1.1
         ports:
         - containerPort: 8027
-        envFrom:
-        - configMapRef:
-            name: shared-env
         resources:
           requests:
             cpu: "100m"
